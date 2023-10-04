@@ -20,3 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/example', [ServicesController::class, 'example']);
+
+Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices']);
