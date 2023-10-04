@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TemplatesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/example', [ServicesController::class, 'example']);
 
 Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices']);
+
+Route::get('/{accountNum}/templates', [TemplatesController::class, 'getAllTemplates']);
+Route::get('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'getTemplateByID']);
+Route::post('/{accountNum}/templates', [TemplatesController::class, 'createNewTemplate']);
