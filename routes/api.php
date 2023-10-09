@@ -27,3 +27,5 @@ Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices
 Route::get('/{accountNum}/templates', [TemplatesController::class, 'getAllTemplates']);
 Route::get('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'getTemplateByID']);
 Route::post('/{accountNum}/templates', [TemplatesController::class, 'createNewTemplate']);
+Route::put('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'updateTemplateByID']);
+Route::delete('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'deleteTemplateByID']);

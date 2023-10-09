@@ -46,7 +46,7 @@ class TemplatesController extends Controller
         $template = TemplatesModel::where('Account', $accountNum)
             ->where('id', $templateID)
             ->first();
-    
+
         if ($template) {
             return response()->json([
                 'Template' => $template,
@@ -56,9 +56,9 @@ class TemplatesController extends Controller
                 'message' => 'Template not found',
             ], 404);
         }
-    }    
+    }
 
-    public function createNewTemplate($accountNum,Request $request)
+    public function createNewTemplate($accountNum, Request $request)
     {
         $request->validate([
             'Name' => 'required',
@@ -67,7 +67,7 @@ class TemplatesController extends Controller
         $templates = TemplatesModel::create([
             'Account' => $accountNum,
             'Name' => $request->Name
-            
+
         ]);
 
         return response([
@@ -75,4 +75,46 @@ class TemplatesController extends Controller
             'Templates' => $templates
         ], 200);
     }
+
+    public function updateTemplateByID($accountNum, $templateID, Request $request)
+    {
+        $template = TemplatesModel::where('Account', $accountNum)
+            ->where('id', $templateID)
+            ->first();
+
+        if ($template) {
+            $template->update([
+                'Name' => $request->input('Name'),
+            ]);
+
+            return response()->json([
+                'Template' => $template,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Template not found',
+            ], 404);
+        }
+    }
+
+    public function deleteTemplateByID($accountNum, $templateID)
+{
+    $template = TemplatesModel::where('Account', $accountNum)
+        ->where('id', $templateID)
+        ->first();
+
+    if ($template) {
+        $template->delete();
+
+        return response()->json([
+            'message' => 'Template deleted successfully',
+        ], 200);
+    } else {
+        return response()->json([
+            'message' => 'Template not found',
+        ], 404);
+    }
+}
+
+
 }
