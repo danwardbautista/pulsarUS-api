@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ServicesController;
+use App\Http\Controllers\TagsController;
 use App\Http\Controllers\TemplatesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,8 +25,12 @@ Route::get('/example', [ServicesController::class, 'example']);
 
 Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices']);
 
+//TEMPLATES ENDPOINT
 Route::get('/{accountNum}/templates', [TemplatesController::class, 'getAllTemplates']);
 Route::get('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'getTemplateByID']);
 Route::post('/{accountNum}/templates', [TemplatesController::class, 'createNewTemplate']);
 Route::put('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'updateTemplateByID']);
 Route::delete('/{accountNum}/templates/{templateID}', [TemplatesController::class, 'deleteTemplateByID']);
+
+//TAGS ENDPOINT
+Route::get('/{accountNum}/tags', [TagsController::class, 'getAllTags']);
