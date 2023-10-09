@@ -34,3 +34,7 @@ Route::delete('/{accountNum}/templates/{templateID}', [TemplatesController::clas
 
 //TAGS ENDPOINT
 Route::get('/{accountNum}/tags', [TagsController::class, 'getAllTags']);
+Route::get('/{accountNum}/tags/{tagID}', [TagsController::class, 'getTagByID']);
+Route::post('/{accountNum}/tags', [TagsController::class, 'createNewTag']);
+Route::put('/{accountNum}/tags/{tagID}', [TagsController::class, 'updateTagByID']);
+Route::delete('/{accountNum}/tags/{tagID}', [TagsController::class, 'deleteTagByID']);

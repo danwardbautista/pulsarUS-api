@@ -83,6 +83,10 @@ class TemplatesController extends Controller
             ->first();
 
         if ($template) {
+            $request->validate([
+                'Name' => 'required',
+            ]);
+
             $template->update([
                 'Name' => $request->input('Name'),
             ]);
@@ -98,23 +102,23 @@ class TemplatesController extends Controller
     }
 
     public function deleteTemplateByID($accountNum, $templateID)
-{
-    $template = TemplatesModel::where('Account', $accountNum)
-        ->where('id', $templateID)
-        ->first();
+    {
+        $template = TemplatesModel::where('Account', $accountNum)
+            ->where('id', $templateID)
+            ->first();
 
-    if ($template) {
-        $template->delete();
+        if ($template) {
+            $template->delete();
 
-        return response()->json([
-            'message' => 'Template deleted successfully',
-        ], 200);
-    } else {
-        return response()->json([
-            'message' => 'Template not found',
-        ], 404);
+            return response()->json([
+                'message' => 'Template deleted successfully',
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Template not found',
+            ], 404);
+        }
     }
-}
 
 
 }

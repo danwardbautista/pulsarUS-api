@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TagsModel;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class TagsController extends Controller
 {
@@ -40,11 +41,10 @@ class TagsController extends Controller
         ], 200);
     }
 
-    public function getTagByID($accountNum, $templateID, Request $request)
+    public function getTagByID($accountNum, $tagID, Request $request)
     {
-        // Filter templates by Account and templateID
         $tag = TagsModel::where('Account', $accountNum)
-            ->where('id', $templateID)
+            ->where('id', $tagID)
             ->first();
 
         if ($tag) {
@@ -58,5 +58,74 @@ class TagsController extends Controller
         }
     }
 
-    
+    public function createNewTag($accountNum, Request $request)
+    {
+        $request->validate([
+            'Name' => 'required',
+            'Hex' => 'required',
+        ]);
+
+        $uuid = Uuid::uuid4()->toString();
+
+        $tags = TagsModel::create([
+            'uuid' => $uuid,
+            'Account' => $accountNum,
+            'Name' => $request->Name,
+            'Hex' => $request->Hex
+        ]);
+
+        return response([
+            'message' => "Tag created successfully",
+            'Tags' => $tags
+        ], 200);
+    }
+
+    public function updateTagByID($accountNum, $tagID, Request $request)
+    {
+        $tag = TagsModel::where('Account', $accountNum)
+            ->where('id', $tagID)
+            ->first();
+
+        if ($tag) {
+            $request->validate([
+                'Name' => 'required',
+                'Hex' => 'required',
+            ]);
+
+            $tag->update([
+                'Name' => $request->input('Name'),
+                'Hex' => $request->input('Hex')
+            ]);
+
+            return response()->json([
+                'Tag' => $tag,
+            ], 200);
+            
+        } else {
+            return response()->json([
+                'message' => 'Tag not found',
+            ], 404);
+        }
+    }
+
+    public function deleteTagByID($accountNum, $tagID, Request $request)
+    {
+        $tag = TagsModel::where('Account', $accountNum)
+            ->where('id', $tagID)
+            ->first();
+
+        if ($tag) {
+            $tag -> delete();
+
+            return response()->json([
+                'message' => 'Template deleted successfully',
+            ], 200);
+            
+        } else {
+            return response()->json([
+                'message' => 'Tag not found',
+            ], 404);
+        }
+    }
+
 }
