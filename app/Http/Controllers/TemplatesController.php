@@ -29,7 +29,7 @@ class TemplatesController extends Controller
             'page' => $templates->currentPage(),
             'page_size' => $page_size,
             'size' => $templates->count(),
-            // 'next_page' => $services->nextPageUrl(),
+            'next_page' => $templates->nextPageUrl(),
             // 'last_page' => $services->lastPage(),
             'filteredCount' => $templates->total(),
         ];

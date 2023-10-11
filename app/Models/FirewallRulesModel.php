@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ServicesModel extends Model
+class FirewallRulesModel extends Model
 {
-    public $table = "services";
+    public $table = "firewall_rules";
     // use HasFactory;
     protected $guarded = [];
 }

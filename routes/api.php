@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FirewallRulesController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\TemplatesController;
@@ -38,3 +39,10 @@ Route::get('/{accountNum}/tags/{tagID}', [TagsController::class, 'getTagByID']);
 Route::post('/{accountNum}/tags', [TagsController::class, 'createNewTag']);
 Route::put('/{accountNum}/tags/{tagID}', [TagsController::class, 'updateTagByID']);
 Route::delete('/{accountNum}/tags/{tagID}', [TagsController::class, 'deleteTagByID']);
+
+// FIREWALL RULES ENDPOINT
+Route::get('/{accountNum}/Firewall/Profiles', [FirewallRulesController::class, 'getAllFirewallRules']);
+Route::get('/{accountNum}/Firewall/Profiles/{uid}', [FirewallRulesController::class, 'getFirewallRuleByID']);
+Route::post('/{accountNum}/Firewall/Profiles', [FirewallRulesController::class, 'createFirewallRule']);
+Route::put('/{accountNum}/Firewall/Profiles/{uid}', [FirewallRulesController::class, 'updateFirewallRule']);
+Route::delete('/{accountNum}/Firewall/Profiles/{uid}', [FirewallRulesController::class, 'deleteFirewallRule']);
