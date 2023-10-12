@@ -121,7 +121,7 @@ class FirewallRulesController extends Controller
                 ],
                 'remoteAddresses' => [$exception['InboundIPPrefix']],
                 'displayPort' => (int) $exception['InboundPortRange'],
-                'parsedProtocol' => 'tcp',
+                'parsedProtocol' => $this->GetPreset(intval($exception['OutboundProtocol']), $exception['OutboundPortRange']),
             ];
         };
 
@@ -169,7 +169,7 @@ class FirewallRulesController extends Controller
                 ],
                 'remoteAddresses' => [$exception['OutboundIPPrefix']],
                 'displayPort' => (int) $exception['OutboundPortRange'],
-                'parsedProtocol' => 'tcp',
+                'parsedProtocol' => $this->GetPreset(intval($exception['OutboundProtocol']), $exception['OutboundPortRange']),
             ];
         };
 
@@ -183,7 +183,7 @@ class FirewallRulesController extends Controller
                 ],
                 'remoteAddresses' => [$exception['InboundIPPrefix']],
                 'displayPort' => (int) $exception['InboundPortRange'],
-                'parsedProtocol' => 'tcp',
+                'parsedProtocol' => $this->GetPreset(intval($exception['OutboundProtocol']), $exception['OutboundPortRange']),
             ];
         };
 
@@ -259,7 +259,7 @@ class FirewallRulesController extends Controller
         // sip
         if ($protocol == '6' && $port == '5060') return 'sip';
 
-        return 'unknown';
+        return 'custom';
     }
 
 }
