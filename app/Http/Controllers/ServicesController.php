@@ -4,15 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\ServicesModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+
 
 class ServicesController extends Controller
 {
-    //
-    public function example()
+    public function example(Request $request)
     {
-        return response([
-            'message' => "Example API Call. Working...",
-        ], 200);
+        $token = $request->header('Authorization');
+
+        $response = Http::withHeaders(['Authorization' => $token])
+        ->get('https://auth.passcess.net/auth/realms/master/protocol/openid-connect/userinfo?client_id=pulsar-portal');
+
+        if ($response->successful()) {
+            return response([
+                'message' => 'Token is valid.',
+                'keycloak_response' => $response->json(),
+            ], 200);
+        } else {
+            return response([
+                'message' => 'Error. Token is not valid.',
+                'keycloak_response' => $response->json(),
+            ], $response->status());
+        }
     }
 
     public function getAllServices($accountNum, Request $request)
