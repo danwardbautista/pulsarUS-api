@@ -11,22 +11,9 @@ class ServicesController extends Controller
 {
     public function example(Request $request)
     {
-        $token = $request->header('Authorization');
-
-        $response = Http::withHeaders(['Authorization' => $token])
-        ->get('https://auth.passcess.net/auth/realms/master/protocol/openid-connect/userinfo?client_id=pulsar-portal');
-
-        if ($response->successful()) {
-            return response([
-                'message' => 'Token is valid.',
-                'keycloak_response' => $response->json(),
-            ], 200);
-        } else {
-            return response([
-                'message' => 'Error. Token is not valid.',
-                'keycloak_response' => $response->json(),
-            ], $response->status());
-        }
+        return response()->json([
+            'message' => "This is an example API call.",
+        ], 200);
     }
 
     public function getAllServices($accountNum, Request $request)

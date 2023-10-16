@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DomainFilterController;
 use App\Http\Controllers\FirewallRulesController;
 use App\Http\Controllers\ServicesController;
 use App\Http\Controllers\TagsController;
@@ -22,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => 'token-validation'], function () {
+// Route::group(['middleware' => 'token-validation'], function () {
     Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices']);
 
     //TEMPLATES ENDPOINT
@@ -45,6 +46,12 @@ Route::group(['middleware' => 'token-validation'], function () {
     Route::post('/{accountNum}/Firewall/Profiles', [FirewallRulesController::class, 'createFirewallRule']);
     Route::put('/{accountNum}/Firewall/Profiles/{uid}', [FirewallRulesController::class, 'updateFirewallRule']);
     Route::delete('/{accountNum}/Firewall/Profiles/{uid}', [FirewallRulesController::class, 'deleteFirewallRule']);
-});
+// });
 
 Route::get('/example', [ServicesController::class, 'example']);
+
+Route::get('/{accountNum}/DomainFilter/Profiles', [DomainFilterController::class, 'getAllDomainFilter']);
+Route::get('/{accountNum}/DomainFilter/Profiles/{uid}', [DomainFilterController::class, 'getDomainFilterByID']);
+Route::post('/{accountNum}/DomainFilter/Profiles', [DomainFilterController::class, 'createDomainFilter']);
+Route::put('/{accountNum}/DomainFilter/Profiles/{uid}', [DomainFilterController::class, 'updateDomainFilter']);
+Route::delete('/{accountNum}/DomainFilter/Profiles/{uid}', [DomainFilterController::class, 'deleteDomainFilter']);

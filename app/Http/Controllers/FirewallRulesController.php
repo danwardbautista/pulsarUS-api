@@ -50,7 +50,7 @@ class FirewallRulesController extends Controller
         }
 
         return response()->json([
-            'Profile' => $transformedFirewallRules,
+            'Profiles' => $transformedFirewallRules,
             'Summary' => $pagination,
         ], 200);
     }
