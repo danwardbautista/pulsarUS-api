@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActionLogsController;
 use App\Http\Controllers\DomainFilterController;
 use App\Http\Controllers\FirewallRulesController;
 use App\Http\Controllers\ServicesController;
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'token-validation'], function () {
+    Route::get('/example', [ServicesController::class, 'example']);
+    
     Route::get('/{accountNum}/services', [ServicesController::class, 'getAllServices']);
 
     //TEMPLATES ENDPOINT
@@ -53,6 +56,9 @@ Route::group(['middleware' => 'token-validation'], function () {
     Route::post('/{accountNum}/DomainFilter/Profiles', [DomainFilterController::class, 'createDomainFilter']);
     Route::put('/{accountNum}/DomainFilter/Profiles/{uid}', [DomainFilterController::class, 'updateDomainFilter']);
     Route::delete('/{accountNum}/DomainFilter/Profiles/{uid}', [DomainFilterController::class, 'deleteDomainFilter']);
+
+    //ACTION LOGS ENDPOINT
+    Route::get('/{accountNum}/Activities', [ActionLogsController::class, 'getAllActionLogs']);
+    Route::get('/{accountNum}/Activities', [ActionLogsController::class, 'getAccountNumActionLogs']);
 });
 
-Route::get('/example', [ServicesController::class, 'example']);

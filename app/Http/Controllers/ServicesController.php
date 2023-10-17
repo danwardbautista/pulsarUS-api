@@ -11,10 +11,14 @@ class ServicesController extends Controller
 {
     public function example(Request $request)
     {
+        $preferred_username = $request->attributes->get('preferred_username');
+
         return response()->json([
             'message' => "This is an example API call.",
+            'username' => $preferred_username,
         ], 200);
     }
+
 
     public function getAllServices($accountNum, Request $request)
     {

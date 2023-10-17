@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLogsModel;
 use App\Models\TemplatesModel;
 use Illuminate\Http\Request;
 
@@ -70,9 +71,19 @@ class TemplatesController extends Controller
 
         ]);
 
+        $preferred_username = $request->attributes->get('preferred_username');
+
+        $actionLogs = ActionLogsModel::create([
+            'accountNum' => $accountNum,
+            'data' => json_encode($templates),
+            'operation' => "Create Template",
+            "userID" => $preferred_username
+
+        ]);
+
         return response([
             'message' => "Template created successfully",
-            'Templates' => $templates
+            'Templates' => $templates,
         ], 200);
     }
 
@@ -91,6 +102,16 @@ class TemplatesController extends Controller
                 'Name' => $request->input('Name'),
             ]);
 
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($template),
+                'operation' => "Update Template",
+                "userID" => $preferred_username
+
+            ]);
+
             return response()->json([
                 'Template' => $template,
             ], 200);
@@ -101,7 +122,7 @@ class TemplatesController extends Controller
         }
     }
 
-    public function deleteTemplateByID($accountNum, $templateID)
+    public function deleteTemplateByID($accountNum, $templateID, Request $request)
     {
         $template = TemplatesModel::where('Account', $accountNum)
             ->where('id', $templateID)
@@ -109,6 +130,16 @@ class TemplatesController extends Controller
 
         if ($template) {
             $template->delete();
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($template),
+                'operation' => "Delete Template",
+                "userID" => $preferred_username
+
+            ]);
 
             return response()->json([
                 'message' => 'Template deleted successfully',

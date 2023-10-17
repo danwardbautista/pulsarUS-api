@@ -20,6 +20,14 @@ class TokenValidationMiddleware
                 ->get('https://auth.passcess.net/auth/realms/master/protocol/openid-connect/userinfo?client_id=pulsar-portal');
 
             if ($response->successful()) {
+                $keycloakData = $response->json();
+
+                if (isset($keycloakData['preferred_username'])) {
+                    $preferredUsername = $keycloakData['preferred_username'];
+
+                    $request->attributes->add(['preferred_username' => $preferredUsername]);
+                }
+
                 return $next($request);
             } else {
                 return response([
@@ -31,4 +39,6 @@ class TokenValidationMiddleware
             return $next($request);
         }
     }
+
+
 }
