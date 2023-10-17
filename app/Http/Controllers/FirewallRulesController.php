@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLogsModel;
 use App\Models\FirewallRulesModel;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -142,6 +143,17 @@ class FirewallRulesController extends Controller
 
         FirewallRulesModel::create($data);
 
+        $preferred_username = $request->attributes->get('preferred_username');
+
+        $actionLogs = ActionLogsModel::create([
+            'accountNum' => $accountNum,
+            'data' => json_encode($data),
+            'operation' => "Create Firewall",
+            "userID" => $preferred_username,
+            "uID" => $uuid
+
+        ]);
+
         return response([
             'message' => "Firewall rule created successfully",
             'Profile' => $data
@@ -205,6 +217,18 @@ class FirewallRulesController extends Controller
 
         if ($firewallRule) {
             $firewallRule->update($data);
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($data),
+                'operation' => "Update Firewall",
+                "userID" => $preferred_username,
+                "uID" => $firewallRule->uuid
+
+            ]);
+
             return response([
                 'message' => "Firewall rule updated successfully",
                 'Profile' => $data
@@ -222,6 +246,18 @@ class FirewallRulesController extends Controller
 
         if ($firewallRule) {
             $firewallRule->delete();
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($firewallRule),
+                'operation' => "Delete Firewall",
+                "userID" => $preferred_username,
+                "uID" => $firewallRule->uuid
+
+            ]);
+
             return response([
                 'message' => "Firewall rule with UID $uid deleted successfully",
             ], 200);
@@ -232,32 +268,45 @@ class FirewallRulesController extends Controller
         }
     }
 
-    public function GetPreset($protocol, $port) {
+    public function GetPreset($protocol, $port)
+    {
 
         // HTTP
-        if ($protocol == '6' && $port == '80') return 'http';
-        if ($protocol == '6' && $port == '443') return 'https';
+        if ($protocol == '6' && $port == '80')
+            return 'http';
+        if ($protocol == '6' && $port == '443')
+            return 'https';
 
         // HTTP (UDP)
-        if ($protocol == '17' && $port == '80') return 'http-udp';
-        if ($protocol == '17' && $port == '443') return 'https-udp';
-    
+        if ($protocol == '17' && $port == '80')
+            return 'http-udp';
+        if ($protocol == '17' && $port == '443')
+            return 'https-udp';
+
         // FTP
-        if ($protocol == '6' && $port == '21') return 'ftp';
+        if ($protocol == '6' && $port == '21')
+            return 'ftp';
         // SSH
-        if ($protocol == '6' && $port == '22') return 'ssh';
+        if ($protocol == '6' && $port == '22')
+            return 'ssh';
         // Telnet
-        if ($protocol == '6' && $port == '23') return 'telnet';
+        if ($protocol == '6' && $port == '23')
+            return 'telnet';
         // POP3
-        if ($protocol == '6' && $port == '110') return 'pop3';
+        if ($protocol == '6' && $port == '110')
+            return 'pop3';
         // SMTP
-        if ($protocol == '6' && $port == '25') return 'smtp';
+        if ($protocol == '6' && $port == '25')
+            return 'smtp';
         // ntp
-        if ($protocol == '17' && $port == '123') return 'ntp';
+        if ($protocol == '17' && $port == '123')
+            return 'ntp';
         // snmp
-        if ($protocol == '17' && $port == '161') return 'snmp';
+        if ($protocol == '17' && $port == '161')
+            return 'snmp';
         // sip
-        if ($protocol == '6' && $port == '5060') return 'sip';
+        if ($protocol == '6' && $port == '5060')
+            return 'sip';
 
         return 'unknown';
     }

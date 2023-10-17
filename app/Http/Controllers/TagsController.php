@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLogsModel;
 use App\Models\TagsModel;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -74,6 +75,17 @@ class TagsController extends Controller
             'Hex' => $request->Hex
         ]);
 
+        $preferred_username = $request->attributes->get('preferred_username');
+
+        $actionLogs = ActionLogsModel::create([
+            'accountNum' => $accountNum,
+            'data' => json_encode($tags),
+            'operation' => "Create Tag",
+            "userID" => $preferred_username,
+            "uID" => $uuid
+
+        ]);
+
         return response([
             'message' => "Tag created successfully",
             'Tags' => $tags
@@ -97,10 +109,21 @@ class TagsController extends Controller
                 'Hex' => $request->input('Hex')
             ]);
 
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($tag),
+                'operation' => "Update Tag",
+                "userID" => $preferred_username,
+                "uID" => $tag->uuid
+
+            ]);
+
             return response()->json([
                 'Tag' => $tag,
             ], 200);
-            
+
         } else {
             return response()->json([
                 'message' => 'Tag not found',
@@ -115,12 +138,23 @@ class TagsController extends Controller
             ->first();
 
         if ($tag) {
-            $tag -> delete();
+            $tag->delete();
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($tag),
+                'operation' => "Delete Tag",
+                "userID" => $preferred_username,
+                "uID" => $tag->uuid
+
+            ]);
 
             return response()->json([
-                'message' => 'Template deleted successfully',
+                'message' => 'Tag deleted successfully',
             ], 200);
-            
+
         } else {
             return response()->json([
                 'message' => 'Tag not found',

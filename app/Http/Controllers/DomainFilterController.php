@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActionLogsModel;
 use App\Models\DomainFilterModel;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -116,6 +117,17 @@ class DomainFilterController extends Controller
 
         $domainFilter = DomainFilterModel::create($data);
 
+        $preferred_username = $request->attributes->get('preferred_username');
+
+        $actionLogs = ActionLogsModel::create([
+            'accountNum' => $accountNum,
+            'data' => json_encode($data),
+            'operation' => "Create Domain Filter",
+            "userID" => $preferred_username,
+            "uID" => $uuid
+
+        ]);
+
         return response([
             'message' => "Domain filter created successfully",
             'Profile' => $domainFilter
@@ -143,6 +155,18 @@ class DomainFilterController extends Controller
 
         if ($domainFilter) {
             $domainFilter->update($data);
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($data),
+                'operation' => "Update Domain Filter",
+                "userID" => $preferred_username,
+                "uID" => $domainFilter->uuid
+
+            ]);
+
             return response([
                 'message' => "Domain Filter updated successfully",
                 'Profile' => $data
@@ -160,6 +184,18 @@ class DomainFilterController extends Controller
 
         if ($domainFilter) {
             $domainFilter->delete();
+
+            $preferred_username = $request->attributes->get('preferred_username');
+
+            $actionLogs = ActionLogsModel::create([
+                'accountNum' => $accountNum,
+                'data' => json_encode($domainFilter),
+                'operation' => "Delete Domain Filter",
+                "userID" => $preferred_username,
+                "uID" => $domainFilter->uuid
+
+            ]);
+
             return response([
                 'message' => "Domain Filter deleted successfully",
             ], 200);
