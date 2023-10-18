@@ -23,15 +23,28 @@ class TemplatesController extends Controller
             $page_size = 100;
         }
 
-        // Filter services by accountNum
-        $templates = TemplatesModel::where('Account', $accountNum)->paginate($page_size);
+        $query = TemplatesModel::where('Account', $accountNum);
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('Name', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $templates = $query->paginate($page_size);
 
         $pagination = [
             'page' => $templates->currentPage(),
             'page_size' => $page_size,
             'size' => $templates->count(),
             'next_page' => $templates->nextPageUrl(),
-            // 'last_page' => $services->lastPage(),
             'filteredCount' => $templates->total(),
         ];
 
@@ -40,6 +53,9 @@ class TemplatesController extends Controller
             'Summary' => $pagination,
         ], 200);
     }
+
+
+
 
     public function getTemplateByID($accountNum, $templateID, Request $request)
     {

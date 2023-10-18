@@ -36,6 +36,7 @@ class TokenValidationMiddleware
                 ], $response->status());
             }
         } else {
+            $request->attributes->add(['preferred_username' => 'auth-off']);
             return $next($request);
         }
     }

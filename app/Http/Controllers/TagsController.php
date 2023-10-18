@@ -25,7 +25,22 @@ class TagsController extends Controller
         }
 
         // Filter services by accountNum
-        $tags = TagsModel::where('Account', $accountNum)->paginate($page_size);
+        $query = TagsModel::where('Account', $accountNum);
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('Name', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $tags = $query->paginate($page_size);
 
         $pagination = [
             'page' => $tags->currentPage(),
