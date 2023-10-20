@@ -24,7 +24,24 @@ class DomainFilterController extends Controller
         }
 
         // Filter services by accountNum
-        $domainFilters = DomainFilterModel::paginate($page_size);
+        $query = DomainFilterModel::where('customData', 'like', '%' . $accountNum . '%');
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('label', 'like', '%' . $searchTerm . '%')
+                ->orWhere('customData', 'like', '%' . $searchTerm . '%')
+                ->orWhere('domains', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $domainFilters = $query->paginate($page_size);
 
         $pagination = [
             'page' => $domainFilters->currentPage(),

@@ -25,7 +25,25 @@ class FirewallRulesController extends Controller
         }
 
         // Filter services by accountNum
-        $firewallRules = FirewallRulesModel::paginate($page_size);
+        $query = FirewallRulesModel::where('customData', 'like', '%' . $accountNum . '%');
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('label', 'like', '%' . $searchTerm . '%')
+                ->orWhere('customData', 'like', '%' . $searchTerm . '%')
+                ->orWhere('inbound', 'like', '%' . $searchTerm . '%')
+                ->orWhere('outbound', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $firewallRules = $query->paginate($page_size);
 
         $pagination = [
             'page' => $firewallRules->currentPage(),
