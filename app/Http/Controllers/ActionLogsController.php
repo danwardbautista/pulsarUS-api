@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class ActionLogsController extends Controller
 {
     //
-    public function getAllActionLogs($accountNum, Request $request)
+    public function getAccountNumActionLogs($accountNum, Request $request)
     {
         // Specify the number of items per page.
         if ($request->filled('page_size')) {
@@ -22,7 +22,25 @@ class ActionLogsController extends Controller
             $page_size = 100;
         }
 
-        $actionLogs = ActionLogsModel::where('Account', $accountNum)->paginate($page_size);
+        $query = ActionLogsModel::where('accountNum', $accountNum);
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('data', 'like', '%' . $searchTerm . '%')
+                ->orWhere('operation', 'like', '%' . $searchTerm . '%')
+                ->orWhere('userID', 'like', '%' . $searchTerm . '%')
+                ->orWhere('uID', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $actionLogs = $query->paginate($page_size);
 
         $pagination = [
             'page' => $actionLogs->currentPage(),
@@ -39,7 +57,7 @@ class ActionLogsController extends Controller
         ], 200);
     }
 
-    public function getAccountNumActionLogs($accountNum, Request $request)
+    public function getAllActionLogs($accountNum, Request $request)
     {
         // Specify the number of items per page.
         if ($request->filled('page_size')) {
@@ -54,7 +72,25 @@ class ActionLogsController extends Controller
         }
 
         // Filter services by accountNum
-        $actionLogs = ActionLogsModel::paginate($page_size);
+        $query = ActionLogsModel::query();
+
+        if ($request->filled('search')) {
+            $searchTerm = $request->input('search');
+            $query->where('data', 'like', '%' . $searchTerm . '%')
+                ->orWhere('operation', 'like', '%' . $searchTerm . '%')
+                ->orWhere('userID', 'like', '%' . $searchTerm . '%')
+                ->orWhere('uID', 'like', '%' . $searchTerm . '%');
+        }
+
+        if ($request->filled('sort')) {
+            $sortField = $request->input('sort');
+
+            $sortOrder = $request->input('order', 'asc');
+
+            $query->orderBy($sortField, $sortOrder);
+        }
+
+        $actionLogs = $query->paginate($page_size);
 
         $pagination = [
             'page' => $actionLogs->currentPage(),

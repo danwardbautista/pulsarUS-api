@@ -59,6 +59,6 @@ Route::group(['middleware' => 'token-validation'], function () {
 
     //ACTION LOGS ENDPOINT
     Route::get('/{accountNum}/Activities', [ActionLogsController::class, 'getAllActionLogs']);
-    Route::get('/{accountNum}/Activities', [ActionLogsController::class, 'getAccountNumActionLogs']);
+    Route::get('/{accountNum}/Activities/Profile', [ActionLogsController::class, 'getAccountNumActionLogs']);
 });
 
